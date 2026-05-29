@@ -104,124 +104,200 @@ CREATE TABLE Table_Name (
 ```
 
 **Question 1**
---
--- Paste Question 1 here
 
-```sql
--- Paste your SQL code below for Question 1
+
+<img width="1270" height="304" alt="image" src="https://github.com/user-attachments/assets/1a0c8e54-7e95-4511-921b-5b66b878a1b1" />
+
+## Program 
+```
+CREATE TABLE Bonuses(
+BonusID INT PRIMARY KEY,
+EmployeeID INT,
+BonusAmount REAL CHECK(BonusAmount>0),
+BonusDate DATE,
+Reason TEXT NOT NULL
+);
 ```
 
 **Output:**
 
-![Output1](output.png)
+
+<img width="1289" height="292" alt="image" src="https://github.com/user-attachments/assets/463c516b-8b6a-4cb5-b053-f94623d0bfab" />
+
 
 **Question 2**
----
--- Paste Question 2 here
 
-```sql
--- Paste your SQL code below for Question 2
+
+<img width="920" height="199" alt="image" src="https://github.com/user-attachments/assets/b83b12be-8512-4ce9-8f56-1f78cb813813" />
+
+## Program 
+```
+INSERT INTO Products(ProductID,Name,Category,Price,Stock)
+VALUES(101,'Laptop','Electronics',1500,50);
+
 ```
 
 **Output:**
 
-![Output2](output.png)
+
+<img width="1243" height="174" alt="image" src="https://github.com/user-attachments/assets/c33718ef-a25e-4078-a3a2-b8b0dc54f81a" />
+
 
 **Question 3**
----
--- Paste Question 3 here
 
-```sql
--- Paste your SQL code below for Question 3
+<img width="850" height="355" alt="image" src="https://github.com/user-attachments/assets/baf6816d-0e35-412b-a80d-d51b7bb1f182" />
+
+## Program 
+```
+CREATE TABLE item(
+item_id TEXT PRIMARY KEY,
+item_desc TEXT NOT NULL,
+rate INT NOT NULL,
+icom_id TEXT(4),
+FOREIGN KEY (icom_id) REFERENCES company(com_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+);
 ```
 
 **Output:**
 
-![Output3](output.png)
+<img width="1256" height="260" alt="image" src="https://github.com/user-attachments/assets/b1397ab8-35c5-4fd7-9d68-a734b4916001" />
 
 **Question 4**
----
--- Paste Question 4 here
 
-```sql
--- Paste your SQL code below for Question 4
+
+<img width="1152" height="250" alt="image" src="https://github.com/user-attachments/assets/99baf423-34d6-4860-ad27-72e3f2025a59" />
+
+## Program 
+```
+CREATE TABLE ProjectAssignments(
+AssignmentID INT PRIMARY KEY,
+EmployeeID INT,
+ProjectID INT,
+AssignmentDate DATE NOT NULL,
+FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID),
+FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+);
 ```
 
 **Output:**
 
-![Output4](output.png)
+<img width="1246" height="211" alt="image" src="https://github.com/user-attachments/assets/e0262cce-e522-4e84-b0f6-6574b7292508" />
+
 
 **Question 5**
----
--- Paste Question 5 here
 
-```sql
--- Paste your SQL code below for Question 5
+
+<img width="796" height="266" alt="image" src="https://github.com/user-attachments/assets/49bcf1eb-fccd-42b7-8e8f-52d5e24c20eb" />
+
+## Program 
+```
+INSERT INTO Books(ISBN,Title,Author,Publisher,YearPublished)
+SELECT  ISBN, Title, Author, Publisher, YearPublished
+FROM  Out_of_print_books;
 ```
 
 **Output:**
 
-![Output5](output.png)
+<img width="1238" height="220" alt="image" src="https://github.com/user-attachments/assets/49d9e072-40b8-4658-b8c3-de1ce952d454" />
+
 
 **Question 6**
----
--- Paste Question 6 here
 
-```sql
--- Paste your SQL code below for Question 6
+
+<img width="754" height="313" alt="image" src="https://github.com/user-attachments/assets/e5086602-aeee-44c9-9e55-59c924455940" />
+
+## Program 
+```
+CREATE TABLE Events(
+EventID INTEGER,
+EventName TEXT,
+EventDate DATE
+);
 ```
 
 **Output:**
 
-![Output6](output.png)
+
+<img width="1245" height="294" alt="image" src="https://github.com/user-attachments/assets/d03bb893-f714-4852-a055-a6b174a272a7" />
+
 
 **Question 7**
----
--- Paste Question 7 here
 
-```sql
--- Paste your SQL code below for Question 7
+
+<img width="1257" height="396" alt="image" src="https://github.com/user-attachments/assets/d58a95ff-2a88-4254-b6ef-6068e3fcc91c" />
+
+## Program 
+```
+INSERT INTO Products(ProductID,Name,Category,Price,Stock)
+VALUES(106,'Fitness Tracker','Wearables',NULL,NULL);
+INSERT INTO Products(ProductID,Name,Category,Price,Stock)
+VALUES(107,'Laptop','Electronics',999.99,50);
+INSERT INTO Products(ProductID,Name,Category,Price,Stock)
+VALUES(108,'Wireless Earbuds','Accessories',NULL,100);
 ```
 
 **Output:**
 
-![Output7](output.png)
+
+<img width="1244" height="201" alt="image" src="https://github.com/user-attachments/assets/a2c5bbb2-560a-49d9-877c-281c827cd94b" />
+
 
 **Question 8**
----
--- Paste Question 8 here
 
-```sql
--- Paste your SQL code below for Question 8
+
+<img width="846" height="467" alt="image" src="https://github.com/user-attachments/assets/c679ba58-a4c5-438a-864d-ec4724a022de" />
+
+## Program 
+```
+ALTER TABLE Companies ADD COLUMN designation varchar(50);
+ALTER TABLE Companies ADD COLUMN net_salary number;
+ALTER TABLE Companies ADD COLUMN dob date;
 ```
 
 **Output:**
 
-![Output8](output.png)
+
+<img width="1247" height="321" alt="image" src="https://github.com/user-attachments/assets/55f94030-f010-4c9b-875d-8fff0795f06a" />
+
 
 **Question 9**
----
--- Paste Question 9 here
 
-```sql
--- Paste your SQL code below for Question 9
+
+<img width="1258" height="197" alt="image" src="https://github.com/user-attachments/assets/ea02c01d-8d5b-4003-ad8c-e20159a95511" />
+
+## Program 
+```
+CREATE TABLE jobs(
+job_id INT,
+job_title TEXT DEFAULT '',
+min_salary INT DEFAULT 8000,
+max_salary INT DEFAULT NULL);
 ```
 
 **Output:**
 
-![Output9](output.png)
+
+<img width="1249" height="252" alt="image" src="https://github.com/user-attachments/assets/87312ee4-a490-4d5e-b19e-9dd1abf97ef6" />
+
 
 **Question 10**
----
--- Paste Question 10 here
 
-```sql
--- Paste your SQL code below for Question 10
+
+<img width="1210" height="182" alt="image" src="https://github.com/user-attachments/assets/1b46d852-57e2-42c4-94e3-90849a9fc194" />
+
+## Program 
+```
+ALTER TABLE Student_details ADD COLUMN Email VARCHAR(50);
+ALTER TABLE Student_details ADD COLUMN MARKS INT DEFAULT 0;
 ```
 
 **Output:**
 
-![Output10](output.png)
+
+<img width="1246" height="183" alt="image" src="https://github.com/user-attachments/assets/8e52bdd3-279b-49fc-a225-8ba783a11b24" />
+
 
 
 ## RESULT
