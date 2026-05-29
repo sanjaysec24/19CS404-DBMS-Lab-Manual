@@ -79,6 +79,58 @@ END;
 **Output:**  
 The program should display the employee details or an error message.
 
+## Program 
+```
+SET SERVEROUTPUT ON;
+
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE employees';
+EXCEPTION
+    WHEN OTHERS THEN
+        NULL; 
+END;
+/
+
+
+CREATE TABLE employees (
+    emp_id      NUMBER PRIMARY KEY,
+    emp_name    VARCHAR2(100),
+    designation VARCHAR2(100)
+);
+
+DECLARE
+    CURSOR emp_cursor IS
+        SELECT emp_name, designation FROM employees;
+
+    v_emp_name employees.emp_name%TYPE;
+    v_designation employees.designation%TYPE;
+    v_found BOOLEAN := FALSE;
+
+BEGIN
+    OPEN emp_cursor;
+    LOOP
+        FETCH emp_cursor INTO v_emp_name, v_designation;
+        EXIT WHEN emp_cursor%NOTFOUND;
+
+        v_found := TRUE;
+        DBMS_OUTPUT.PUT_LINE('Name: ' || v_emp_name || ', Designation: ' || v_designation);
+    END LOOP;
+    CLOSE emp_cursor;
+
+    IF NOT v_found THEN
+        RAISE_APPLICATION_ERROR(-20001, 'No employee records found.');
+    END IF;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(SQLERRM);
+END;
+/
+```
+## Output
+<img width="1162" height="464" alt="image" src="https://github.com/user-attachments/assets/636f3cce-6568-442f-af97-c47c58a6ab66" />
+
+
 ---
 
 ### **Question 2: Parameterized Cursor with Exception Handling**
@@ -97,6 +149,76 @@ The program should display the employee details or an error message.
 
 **Output:**  
 The program should display the employee details within the specified salary range or an error message if no data is found.
+
+## Program 
+```
+SET SERVEROUTPUT ON;
+/
+
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE employees';
+EXCEPTION
+    WHEN OTHERS THEN
+        NULL; 
+END;
+/
+
+CREATE TABLE employees (
+    emp_id       NUMBER PRIMARY KEY,
+    emp_name     VARCHAR2(100),
+    designation  VARCHAR2(100),
+    salary       NUMBER
+);
+/
+
+BEGIN
+    INSERT INTO employees VALUES (1, 'Alice', 'Manager', 8000);
+    INSERT INTO employees VALUES (2, 'Bob', 'Developer', 4500);
+    INSERT INTO employees VALUES (3, 'Charlie', 'Analyst', 5000);
+    INSERT INTO employees VALUES (4, 'David', 'Tester', 3000);
+    INSERT INTO employees VALUES (5, 'Eve', 'Designer', 6500);
+    COMMIT;
+END;
+/
+
+DECLARE
+
+    v_min_salary NUMBER := 9000;
+    v_max_salary NUMBER := 10000;
+
+    CURSOR emp_cursor(p_min NUMBER, p_max NUMBER) IS
+        SELECT emp_id, emp_name, designation, salary
+        FROM employees
+        WHERE salary BETWEEN p_min AND p_max;
+
+    v_found BOOLEAN := FALSE;
+
+BEGIN
+  
+    FOR emp_rec IN emp_cursor(v_min_salary, v_max_salary) LOOP
+        v_found := TRUE;
+        DBMS_OUTPUT.PUT_LINE(
+            'ID: ' || emp_rec.emp_id ||
+            ', Name: ' || emp_rec.emp_name ||
+            ', Designation: ' || emp_rec.designation ||
+            ', Salary: ' || emp_rec.salary
+        );
+    END LOOP;
+
+    IF NOT v_found THEN
+        RAISE NO_DATA_FOUND;
+    END IF;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No employees found in the specified salary range.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An unexpected error occurred: ' || SQLERRM);
+END;
+/
+```
+## Output
+<img width="1149" height="287" alt="image" src="https://github.com/user-attachments/assets/1a0c1a48-4ac8-4379-824d-4d79438aa1ba" />
 
 ---
 
@@ -117,7 +239,65 @@ The program should display the employee details within the specified salary rang
 **Output:**  
 The program should display employee names with their department numbers or the appropriate error message if no data is found.
 
+## Program
+```
+-- Enable DBMS output
+SET SERVEROUTPUT ON;
+/
+
+-- Step 1: Drop and create the employees table with dept_no
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE employees';
+EXCEPTION
+    WHEN OTHERS THEN
+        NULL; -- Ignore if table doesn't exist
+END;
+/
+
+CREATE TABLE employees (
+    emp_id      NUMBER PRIMARY KEY,
+    emp_name    VARCHAR2(100),
+    designation VARCHAR2(100),
+    salary      NUMBER,
+    dept_no     NUMBER
+);
+/
+
+-- Step 2: No INSERT statements – table remains empty
+
+-- Step 3: PL/SQL block using Cursor FOR loop and exception handling
+
+DECLARE
+    v_found BOOLEAN := FALSE;
+BEGIN
+    -- Cursor FOR loop to fetch employee names and dept numbers
+    FOR emp_rec IN (
+        SELECT emp_name, dept_no FROM employees
+    ) LOOP
+        v_found := TRUE;
+        DBMS_OUTPUT.PUT_LINE('Name: ' || emp_rec.emp_name || 
+                             ', Department No: ' || emp_rec.dept_no);
+    END LOOP;
+
+    -- Check if no data was found
+    IF NOT v_found THEN
+        RAISE NO_DATA_FOUND;
+    END IF;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No employee records found.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An unexpected error occurred: ' || SQLERRM);
+END;
+/
+```
+
+## Output
+<img width="954" height="294" alt="image" src="https://github.com/user-attachments/assets/9c3d4fe7-c02c-4d6d-83b8-95b41b63c126" />
+
 ---
+
 
 ### **Question 4: Cursor with `%ROWTYPE` and Exception Handling**
 
@@ -135,6 +315,58 @@ The program should display employee names with their department numbers or the a
 
 **Output:**  
 The program should display employee records or the appropriate error message if no data is found.
+
+## PROGRAM
+```
+SET SERVEROUTPUT ON;
+
+BEGIN
+  EXECUTE IMMEDIATE 'DROP TABLE employees';
+EXCEPTION
+  WHEN OTHERS THEN
+    NULL;  
+END;
+/
+
+CREATE TABLE employees (
+  emp_id      NUMBER PRIMARY KEY,
+  emp_name    VARCHAR2(100),
+  designation VARCHAR2(100),
+  salary      NUMBER
+);
+
+
+BEGIN
+  INSERT INTO employees VALUES (1, 'Alice', 'Manager', 6000);
+  COMMIT;
+END;
+/
+
+
+DECLARE
+  CURSOR c_emp IS
+    SELECT * FROM employees;
+  v_emp   c_emp%ROWTYPE;
+  v_dummy NUMBER;
+BEGIN
+  OPEN c_emp;
+    FETCH c_emp INTO v_emp;
+  CLOSE c_emp;
+
+
+  v_dummy := v_emp.salary / 0;
+
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No employee records found.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('An unexpected error occurred.');
+END;
+/
+```
+## Output
+<img width="944" height="278" alt="image" src="https://github.com/user-attachments/assets/e0a959f0-e1c5-43d2-8452-92b0f3f65563" />
 
 ---
 
@@ -156,6 +388,72 @@ The program should display employee records or the appropriate error message if 
 The program should update employee salaries and display a message, or it should display an error message if no data is found.
 
 ---
+
+## PROGRAM 
+```
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE employees';
+EXCEPTION
+    WHEN OTHERS THEN
+        NULL; 
+END;
+/
+CREATE TABLE employees (
+    emp_id   NUMBER PRIMARY KEY,
+    emp_name VARCHAR2(100),
+    dept_no  NUMBER,
+    salary   NUMBER
+);
+BEGIN
+    INSERT INTO employees VALUES (1, 'Alice', 10, 3000);
+    INSERT INTO employees VALUES (2, 'Bob', 20, 4000);
+    INSERT INTO employees VALUES (3, 'Charlie', 10, 3500);
+    INSERT INTO employees VALUES (4, 'David', 30, 4500);
+    INSERT INTO employees VALUES (5, 'Eve', 20, 3200);
+    COMMIT;
+END;
+/
+DECLARE
+    CURSOR emp_cursor IS
+        SELECT emp_id, salary
+        FROM employees
+        WHERE dept_no = 10
+        FOR UPDATE;
+
+    v_emp_id   employees.emp_id%TYPE;
+    v_salary   employees.salary%TYPE;
+
+    v_found    BOOLEAN := FALSE;
+
+BEGIN
+    OPEN emp_cursor;
+
+    LOOP
+        FETCH emp_cursor INTO v_emp_id, v_salary;
+        EXIT WHEN emp_cursor%NOTFOUND;
+
+        v_found := TRUE;
+        UPDATE employees
+        SET salary = v_salary * 1.10
+        WHERE emp_id = v_emp_id;
+    END LOOP;
+    CLOSE emp_cursor;
+    IF v_found THEN
+        DBMS_OUTPUT.PUT_LINE('Salaries updated for department 10.');
+    ELSE
+        RAISE NO_DATA_FOUND;
+    END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No employees found in the specified department.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An unexpected error occurred: ' || SQLERRM);
+END;
+/
+```
+## Output
+<img width="999" height="267" alt="image" src="https://github.com/user-attachments/assets/00fa28c9-e67b-43c9-b8e3-07048a2d48fe" />
+
 
 ## RESULT
 Thus, the program successfully executed and displayed employee details using a cursor. 
